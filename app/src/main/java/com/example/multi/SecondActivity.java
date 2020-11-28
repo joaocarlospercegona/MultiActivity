@@ -13,46 +13,43 @@ public class SecondActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
+        TextView outputName = findViewById(R.id.outName);
+        TextView outputMedia = findViewById(R.id.outMedia);
+        TextView outputStatus = findViewById(R.id.outStatus);
+
         Intent it = getIntent();
         if(it != null){
             Bundle params = it.getExtras();
             if(params != null){
                 String nome = params.getString("nome");
-                Double nota1 = params.getDouble("nota1");
-                Double nota2 = params.getDouble("nota2");
+                Double n1 = params.getDouble("n1");
+                Double n2 = params.getDouble("n2");
                 int freq = params.getInt("freq");
-                Double notaF = (nota1 + nota2)/2;
-                String retorno = recebe(notaF, freq);
-                TextView outputName = findViewById(R.id.outName);
-                TextView outputMedia = findViewById(R.id.outMedia);
-                TextView outputStatus = findViewById(R.id.outStatus);
-                outputMedia.setText(notaF.toString());
+
+                Double media = (n1 + n2)/2;
+                String status = situacaoFinal(media, freq);
+
+                outputMedia.setText(media.toString());
                 outputName.setText(nome);
-                outputStatus.setText(retorno);
+                outputStatus.setText(status);
             }
         }
     }
 
-    public String recebe(Double notaF, int freq){
-        String ret = "";
-        if(freq < 75){
-            ret = "Reprovado por Frequência independente da nota";
-        }
-
-        else if(notaF < 4){
-            ret = "Reprovado por Nota independente da Frequência";
-        }
+    public String situacaoFinal(Double media, int freq){
+        String situacao = "";
+        if(freq < 75)
+            situacao = "Aluno Reprovado por Frequência independente da Nota";
+        else if(media < 4)
+            situacao = "Aluno Reprovado por Nota independente da Frequência";
         else if(freq >= 75){
-            if(notaF >= 4 && notaF < 7){
-                ret = "Aluno em Final";
-            }
-            else if(notaF >= 7){
-                ret = "Aprovado";
-            }
-            else{
-                ret = "Reprovado por Nota";
-            }
+            if(media >= 4 && media < 7)
+                situacao = "Aluno em Final";
+            else if(media >= 7)
+                situacao = "Aluno Aprovado";
+            else
+                situacao = "Aluno Reprovado por Nota";
         }
-        return ret;
+        return situacao;
     }
 }
